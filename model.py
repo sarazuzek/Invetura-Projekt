@@ -98,6 +98,12 @@ class Kategorija:
     def __init__(self, ime):
         self.ime = ime
 
+class Racun:
+    def __init__(self, izdelek, kolicina, cena):
+        self.izdelek = izdelek
+        self.kolicina = kolicina
+        self.cena = cena
+
 
 
 
