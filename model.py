@@ -80,12 +80,32 @@ class Inventura:
     def _preveri_izdelek_v_kategoriji(self, izdelek, kategorija):
         if izdelek not in self.izdelki_v_kategoriji[kategorija]:
             raise ValueError(f'{izdelek} ni v kategoriji {kategorija}')
+        
+    def dodaj_racun(self, izdelek, kolicina, cena):
+        if izdelek in self.vsi_racuni.keys():
+            skupna_vrednost = kolicina * cena
+            self.vsi_racuni[izdelek].append(skupna_vrednost)
+        self.vsi_racuni[izdelek] = kolicina * cena
 
-    #def dodaj_racun
+    def popravi_racun(self, izdelek, kolicina, cena):
+        if izdelek in self.vsi_racuni.keys():
+            self.vsi_racuni.pop(izdelek)
+            self.vsi_racuni[izdelek].append(kolicina * cena)
+        raise ValueError(f'Izdelka {izdelek} ni med računi!')
 
-    #def popravi_racun
+    def dodaj_inventuro(self, izdelek, kolicina):
+        self._preveri_izdelek(izdelek)
+        self._preveri_inventuro(izdelek)
+        self.inventura[izdelek].append(kolicina)
 
-    #def dodaj_inventuro
+    def _preveri_izdelek(self, izdelek):
+        if izdelek not in self.izdelki:
+            raise ValueError('Željeni izdelek ne obstaja, inventura zanj ni mogoča!')
+
+    def _preveri_inventuro(self, izdelek):
+        if izdelek in self.inventura.keys():
+            raise ValueError('Ta izdelek, je že v inventuri!')
+
 
 class Izdelek:
     def __init__(self, ime, nabavna_cena, prodajna_cena, kolicina):
