@@ -36,6 +36,15 @@ class Inventura:
         self.izdelki = {} #slovar bo izgledal takole: self.izdelki = {("kat", "ime"): (nab, prod, kolicina)}
 
     def dodaj_izdelek(self, kategorija, ime, nabavna_cena, prodajna_cena, kolicina):
+        try:
+            int(nabavna_cena)
+            int(prodajna_cena)
+        except:
+            raise TypeError('Vnesli ste napačen tip!') 
+        if nabavna_cena > prodajna_cena:
+            raise TypeError('Nabavna cena na more biti večja od prodajne cene!')
+        if type(kolicina) != int:
+            raise TypeError('Količina mora biti celo število!')
         if (kategorija, ime) in self.izdelki:
             raise ValueError('Ta izdelek pod to kategorijo je že dodan!')
         self.izdelki[(kategorija, ime)] = (nabavna_cena, prodajna_cena, kolicina)
@@ -70,6 +79,8 @@ class Inventura:
             raise ValueError(f'{izdelek} ni v kategoriji {kategorija}')
 
     def dodaj_racun(self, kategorija, izdelek, kolicina, popust=0, prodaj_po_nabavni=False):
+        if type(kolicina) != int  or  type(popust) != int:
+            raise TypeError('Količina in popust morata biti celo število')
         self._preveri_izdelek(kategorija, izdelek)
         prodajna_cena = izdelki[(kategorija, izdelek)][1]
         skupna_vrednost = kolicina * prodajna_cena * (1 - popust / 100)
