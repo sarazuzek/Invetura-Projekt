@@ -35,7 +35,7 @@ class Inventura:
         self.vsi_racuni = {}
         self.izdelki = {} #slovar bo izgledal takole: self.izdelki = {("kat", "ime"): (nab, prod, kolicina)}
 
-    def dodaj_izdelke(self, kategorija, ime, nabavna_cena, prodajna_cena, kolicina):
+    def dodaj_izdelek(self, kategorija, ime, nabavna_cena, prodajna_cena, kolicina):
         if (kategorija, ime) in self.izdelki:
             raise ValueError('Ta izdelek pod to kategorijo je že dodan!')
         self.izdelki[(kategorija, ime)] = (nabavna_cena, prodajna_cena, kolicina)
@@ -50,28 +50,6 @@ class Inventura:
             kolicina = v[2]
             kategorije[kategorija] = (ime, nabavna_cena, prodajna_cena, kolicina)
         return kategorije
-
-    # def dodaj_kategorijo(self, kategorija):
-    #     if ime in self._kategorije_po_imenih:
-    #         raise ValueError('Kategorija s tem imenom že obstaja!')
-    #     nova = Kategorija(ime, self)
-    #     self.izdelki.append(nov)
-    #     self._izdelki_po_imenih[ime] = nov
-    #     return nov
-
-    # def dodaj_izdelek_v_kategorijo(self, izdelek, kategorija):
-    #     if izdelek in self.izdelki_v_kategoriji[kategorija]:
-    #         raise ValueError(f'{izdelek} je že v kategoriji {kategorija}!')
-    #     self.izdelki_v_kategoriji[kategorija].append(izdelek)
-
-    # def odstrani_kategorijo(self, kategorija):
-    #     self._preveri_kategorijo(kategorija)
-    #     self.kategorije.remove(kategorija)
-    #     del self.izdelki_v_kategoriji[kategorija]
-
-    # def _preveri_kategorijo(self, kategorija):
-    #     if self.izdelki_v_kategoriji[kategorija] is not None:
-    #         raise ValueError('Kategorije ne morete odstraniti, saj so v njej izdelki')
 
     def odstrani_izdelek(self, kategorija, ime):
         if (kategorija, ime) in self.izdelki:
@@ -177,22 +155,6 @@ class Inventura:
             dobicek += self.dobicek_na_kategorijo(v)
         return dobicek
 
-# class Izdelek:
-#     def __init__(self, ime, nabavna_cena, prodajna_cena, kolicina):
-#         self.ime = ime
-#         self.nabavna_cena = nabavna_cena
-#         self.prodajna_cena = prodajna_cena
-#         self.kolicina = kolicina
-
-# class Kategorija:
-#     def __init__(self, ime):
-#         self.ime = ime
-
-# class Racun:
-#     def __init__(self, izdelek, kolicina, cena):
-#         self.izdelek = izdelek
-#         self.kolicina = kolicina
-#         self.cena = cena
 
 
 
