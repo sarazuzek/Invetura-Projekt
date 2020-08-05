@@ -31,55 +31,67 @@ class Uporabnik:
 
 class Inventura: 
     def __init__(self):
-        self.zacetno_stanje = []
-        self.kategorije = []
-        self.izdelki = []
         self.inventura = {}
         self.vsi_racuni = {}
-        self.izdelki_v_kategoriji = {}
-        self._izdelki_po_imenih = {}
-        self._kategorije_po_imenih = {}
+        self.izdelki = {} #slovar bo izgledal takole: self.izdelki = {("kat", "ime"): (nab, prod, kolicina)}
 
-    def dodaj_izdelke(self, ime, nabavna_cena, prodajna_cena, kolicina):
-        if ime in self._izdelki_po_imenih:
-            raise ValueError('Izdelk s tem imenom že obstaja!')
-        nov = Izdelek(ime, nabavna_cena, prodajna_cena, kolicina, self)
-        self.izdelki.append(nov)
-        self._izdelki_po_imenih[ime] = nov
-        return nov
+    def dodaj_izdelke(self, kategorija, ime, nabavna_cena, prodajna_cena, kolicina):
+        if (kategorija, ime) in self.izdelki:
+            raise ValueError('Ta izdelek pod to kategorijo je že dodan!')
+        self.izdelki[(kategorija, ime)] = (nabavna_cena, prodajna_cena, kolicina)
 
-    def dodaj_kategorijo(self, kategorija):
-        if ime in self._kategorije_po_imenih:
-            raise ValueError('Kategorija s tem imenom že obstaja!')
-        nova = Kategorija(ime, self)
-        self.izdelki.append(nov)
-        self._izdelki_po_imenih[ime] = nov
-        return nov
+    def izdelki_po_kategorijah(self):   
+        kategorije = {}
+        for k,v in self.izdelki.items():
+            kategorija = k[0]
+            ime = k[1]
+            nabavna_cena = v[0]
+            prodajna_cena = v[1]
+            kolicina = v[2]
+            kategorije[kategorija] = (ime, nabavna_cena, prodajna_cena, kolicina)
+        return kategorije
 
-    def dodaj_izdelek_v_kategorijo(self, izdelek, kategorija):
-        if izdelek in self.izdelki_v_kategoriji[kategorija]:
-            raise ValueError(f'{izdelek} je že v kategoriji {kategorija}!')
-        self.izdelki_v_kategoriji[kategorija].append(izdelek)
+    # def dodaj_kategorijo(self, kategorija):
+    #     if ime in self._kategorije_po_imenih:
+    #         raise ValueError('Kategorija s tem imenom že obstaja!')
+    #     nova = Kategorija(ime, self)
+    #     self.izdelki.append(nov)
+    #     self._izdelki_po_imenih[ime] = nov
+    #     return nov
 
-    def odstrani_kategorijo(self, kategorija):
-        self._preveri_kategorijo(kategorija)
-        self.kategorije.remove(kategorija)
-        del self.izdelki_v_kategoriji[kategorija]
+    # def dodaj_izdelek_v_kategorijo(self, izdelek, kategorija):
+    #     if izdelek in self.izdelki_v_kategoriji[kategorija]:
+    #         raise ValueError(f'{izdelek} je že v kategoriji {kategorija}!')
+    #     self.izdelki_v_kategoriji[kategorija].append(izdelek)
 
-    def _preveri_kategorijo(self, kategorija):
-        if self.izdelki_v_kategoriji[kategorija] is not None:
-            raise ValueError('Kategorije ne morete odstraniti, saj so v njej izdelki')
+    # def odstrani_kategorijo(self, kategorija):
+    #     self._preveri_kategorijo(kategorija)
+    #     self.kategorije.remove(kategorija)
+    #     del self.izdelki_v_kategoriji[kategorija]
 
-    def prenesi_izdelek(self, kat1, kat2, izdelek):
-        self._preveri_izdelek_v_kategoriji(izdelek, kat1)
-        if izdelek in self.izdelki_v_kategoriji[kat2]:
+    # def _preveri_kategorijo(self, kategorija):
+    #     if self.izdelki_v_kategoriji[kategorija] is not None:
+    #         raise ValueError('Kategorije ne morete odstraniti, saj so v njej izdelki')
+
+    def odstrani_izdelek(self, kategorija, ime):
+        if (kategorija, ime) in self.izdelki:
+            del self.izdelki[(kategorija, ime)]
+        raise ValueError(f'{ime} ni v kategoriji {kategorija}.')
+
+    def prenesi_izdelek(self, kat1, kat2, ime):
+        self._preveri_izdelek_v_kategoriji(ime, kat1)
+        if ime in self.kategorije[kat2]:
             raise ValueError(f'izdelek je že v kategoriji {kat2}!')
-        self.izdelki_v_kategoriji[kat2].append(izdelek)
-        self.izdelki_v_kategoriji[kat1].remove(izdelek)
+        self.kategorije[kat2].append(izdelek)
+        self.kategorije[kat1].remove(izdelek)
+        del self.izdelki[(kategorija1, ime)]
+        self.izdelki[(kategorija2, ime)] = (kategorije[kategorija1][1], kategorije[kategorija1][2], kategorije[kategorija1][3])  
 
     def _preveri_izdelek_v_kategoriji(self, izdelek, kategorija):
-        if izdelek not in self.izdelki_v_kategoriji[kategorija]:
+        if izdelek not in self.kategorije[kategorija]:
             raise ValueError(f'{izdelek} ni v kategoriji {kategorija}')
+
+
         
     def dodaj_racun(self, izdelek, kolicina, cena):
         if izdelek in self.vsi_racuni.keys():
