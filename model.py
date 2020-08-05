@@ -91,32 +91,38 @@ class Inventura:
         if izdelek not in self.kategorije[kategorija]:
             raise ValueError(f'{izdelek} ni v kategoriji {kategorija}')
 
+    def dodaj_racun(self, kategorija, izdelek, kolicina, popust=0, prodaj_po_nabavni=False):
+        self._preveri_izdelek(kategorija, izdelek)
+        prodajna_cena = izdelki[(kategorija, izdelek)][1]
+        skupna_vrednost = kolicina * prodajna_cena * (1 - popust / 100)
+        if (kategorija, izdelek) in self.vsi_racuni:
+            self.vsi_racuni[(kategorija, izdelek)].append((kolicina, skupna_vrednost))
+        self.vsi_racuni[(kategorija, izdelek)] = (kolicina, skupna_vrednost)
 
-        
-    def dodaj_racun(self, izdelek, kolicina, cena):
-        if izdelek in self.vsi_racuni.keys():
-            skupna_vrednost = kolicina * cena
-            self.vsi_racuni[izdelek].append(skupna_vrednost)
-        self.vsi_racuni[izdelek] = kolicina * cena
-
-    def popravi_racun(self, izdelek, kolicina, cena):
-        if izdelek in self.vsi_racuni.keys():
-            self.vsi_racuni.pop(izdelek)
-            self.vsi_racuni[izdelek].append(kolicina * cena)
+    def popravi_racun(self, kategorija, izdelek, popravljna_kolicina, popravljena_cena):
+        if (kategorija, izdelek) in self.vsi_racuni:
+            self.vsi_racuni.pop((kategorija, izdelek))
+            self.vsi_racuni[(kategorija, izdelek)].append((popravljena_kolicina * popravljena_cena))
         raise ValueError(f'Izdelka {izdelek} ni med računi!')
 
-    def dodaj_inventuro(self, izdelek, kolicina):
-        self._preveri_izdelek(izdelek)
-        self._preveri_inventuro(izdelek)
-        self.inventura[izdelek].append(kolicina)
+    def dodaj_inventuro(self, kategorija, izdelek, kolicina):
+        self._preveri_izdelek(kategorija, izdelek)
+        self._ze_dodani_izdelki(kategorija, izdelek)
+        self.inventura[(kategorija, izdelek)] = kolicina
 
-    def _preveri_izdelek(self, izdelek):
-        if izdelek not in self.izdelki:
+    def _preveri_izdelek(self, kategorija, izdelek):
+        if (kategorija, izdelek) not in self.izdelki:
             raise ValueError('Željeni izdelek ne obstaja, inventura zanj ni mogoča!')
 
-    def _preveri_inventuro(self, izdelek):
-        if izdelek in self.inventura.keys():
+    def _ze_dodani_izdelki(self, kategorija, izdelek):
+        if (kategorija, izdelek) in self.inventura:
             raise ValueError('Ta izdelek, je že v inventuri!')
+
+    #def sestej_kolicine
+
+    #def dobicek_na_izdelku
+
+    #def celoten_dobicek
 
 
 class Izdelek:
