@@ -118,29 +118,81 @@ class Inventura:
         if (kategorija, izdelek) in self.inventura:
             raise ValueError('Ta izdelek, je že v inventuri!')
 
-    #def sestej_kolicine
+     def sestej_kolicine(self, kategorija, izdelek):
+        self._preveri_(kategorija, izdelek)
+        inventura = self.inventura[(kategorija, izdelek)]
+        racuni = self._kolicina_prodanih_izdelkov(kategorija, izdelek)
+        na_zacetku = self.izdelki[(kategorija, izdelek)][2]
+        if invetura + racuni != na_zacetku:
+            raise ValueError('Nekaj se ne ujema!')
+    
+    def _preveri_(self, kategorija, izdelek):
+        self._preveri_izdelek(kategorija, izdelek)
+        self._preveri_racune(kategorija, izdelek)
+        self._preveri_inventuro(kategorija, izdelek)
 
-    #def dobicek_na_izdelku
+    def _preveri_racune(self, kategorija, izdelek):
+        if (kategorija, izdelek) not in self.vsi_racuni:
+            raise ValueError('Željnega izdelka še ni med računi!')
+    
+    def _preveri_inventuro(self, kategorija, izdelek):
+        if (kategorija, izdelek) not in self.inventura:
+            raise ValueError('Željenga izdelka še ni v inventuri!')
 
-    #def celoten_dobicek
+    def _kolicina_prodanih_izdelkov(self, kategorija, izdelek):
+        vsota = 0
+        for v in self.vsi_racuni[(kategorija, izdelek)][::2]:
+            vsota += v
+        return vsota
+            
+    def dobicek_na_izdelku(self, kategorija, izdelek):
+        self._preveri_(kategorija, izdelek)
+        nabavna_cena = self.izdelki[(kategorija, izdelek)][0]
+        zacetek = self._stanje_zacetek(kategorija, izdelek)
+        prodaja = self._zasluzek_prodaja(kategorija, izdelek)
+        konec = self.inventura[(kategorija, izdelek)] * nabavna_cena
+        dobicek = prodaja + konec - zacetek
 
+    def _zasluzek_prodaja(self, kategorija, izdelek):
+        vsota = 0
+        for v in self.vsi_racuni[(kategorija, izdelek)][1::2]:
+            vsota +=v
+        return vsota
 
-class Izdelek:
-    def __init__(self, ime, nabavna_cena, prodajna_cena, kolicina):
-        self.ime = ime
-        self.nabavna_cena = nabavna_cena
-        self.prodajna_cena = prodajna_cena
-        self.kolicina = kolicina
+    def _stanje_zacetek(self, kategorija, izdelek):
+        nabavna_cena = self.izdelki[(kategorija, izdelek)][0]
+        kolicina = self.izdelki[(kategorija, izdelek)][2]
+        return stanje_na_zacetku == nabavna_cena * kolicina
 
-class Kategorija:
-    def __init__(self, ime):
-        self.ime = ime
+    def dobicek_na_kategorijo(self, kategorija):
+        if kategorija not in self.kategorije:
+            raise ValueError('Ta kategorija ne obstaja!')
+        for v in self.kategorije[kategorija][::4]: 
+            dobicek += self.dobicek_na_izdelku(kategorija, v)
+        return dobicek
 
-class Racun:
-    def __init__(self, izdelek, kolicina, cena):
-        self.izdelek = izdelek
-        self.kolicina = kolicina
-        self.cena = cena
+    def celoten_dobicek(self):
+        dobicek = 0
+        for k in self.kategorije.keys():
+            dobicek += self.dobicek_na_kategorijo(v)
+        return dobicek
+
+# class Izdelek:
+#     def __init__(self, ime, nabavna_cena, prodajna_cena, kolicina):
+#         self.ime = ime
+#         self.nabavna_cena = nabavna_cena
+#         self.prodajna_cena = prodajna_cena
+#         self.kolicina = kolicina
+
+# class Kategorija:
+#     def __init__(self, ime):
+#         self.ime = ime
+
+# class Racun:
+#     def __init__(self, izdelek, kolicina, cena):
+#         self.izdelek = izdelek
+#         self.kolicina = kolicina
+#         self.cena = cena
 
 
 
