@@ -184,6 +184,64 @@ class Inventura:
             dobicek += self.dobicek_na_kategorijo(kategorija)
         return dobicek
 
+    def slovar_s_stanjem(self):   
+        return {
+            'vsi izdelki' : [{
+                'kategorija' : k[0],
+                'ime': k[1],
+                'nabava cena' : v[0],
+                'prodajna cena' : v[1],
+                'kolicina' : v[2]
+            } for k,v in self.izdelki.items()],
+            'vsi racuni' : [{
+                'kategorija' : k[0],
+                'izdelek': k[1],
+                'kolicina' : v[0],
+                'skupna vrednost': v[1]
+            } for k,v in self.vsi_racuni.items()],
+            'inventura' : [{
+                'kategorija' : k[0],
+                'izdelek' : v[0],
+                'kolicina' : v[1]
+            } for k,v in self.inventura.items()]
+        }
+    
+    @classmethod 
+    def nalozi_iz_slovarja(cls, slovar_s_stanjem):
+        inventura = cls()
+        for izdelek in slovar_s_stanjem['vsi izdelki'][]:
+            nov_izdelek = inventura.dodaj_izdelek(
+                izdelek['kategorija'],
+                izdelek['ime'],
+                izdelek['nabavna cena'],
+                izdelek['prodajna cena'],
+                izdelek['kolicina']
+            )
+        for racun in slovar_s_stanjem['vsi racuni']:
+            nov_racun = inventura.dodaj_racun(
+                racun['kategorija'],
+                racun['izdelek'],
+                racun['kolicina'],
+                racun['skupna vrednost']
+            )
+        for inventura in slovar_s_stanjem['inventura']:
+            nova_inventura = inventura.dodaj_inventuro(
+                inventura['kategorija'],
+                inventura['izdelek'],
+                inventura['kolicina']
+            )
+        return inventura
+
+    def shrani_stanje(self, ime_datoteke):
+        with open(ime_datoteke, 'w') as datoteka:
+            json.dump(self.slovar_s_stanjem(), datoteka, ensure_ascii=False, indent=4)
+    
+    @classmethod
+    def nalozi_stanje(cls, ime_datoteke):
+        with open(ime_datoteke) as datoteka:
+            slovar_s_stanjem = json.load(datoteka)
+        return cls.nalozi_iz_slovarja(slovar_s_stanjem)
+
 
 
 
