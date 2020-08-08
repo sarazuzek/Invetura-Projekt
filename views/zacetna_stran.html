@@ -1,0 +1,71 @@
+<html>
+<head>
+    <title>Inventura</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+<h1><pre>
+INVENTURA
+</pre>
+
+
+<h1>Izdelki</h1>
+
+<table class="table">
+    % for izdelek, podatki in inventura.izdelki.items():
+    <tr>
+        <td>{{izdelek[0]}}</td>
+        <td>{{izdelek[1]}}</td>
+        <td>{{podatki[0]}}</td>
+        <td>{{podatki[1]}}</td>
+        <td>{{podatki[2]}}</td>
+    </tr>
+    % end
+</table>
+
+<h1>Računi</h1>
+<ul>
+    % for izdelek, cene in inventura.vsi_racuni.items():
+    <li>{{izdelek[0]}}, {{izdelek[1]}}, {{cene[0]}}, {{cene[1]}}</li>
+    % end
+</ul>
+
+<h1>Inventure</h1>
+<ul>
+    % for izdelek, presteto in inventura.inventura.items():
+    <li>{{izdelek[0]}}, {{izdelek[1]}}, {{presteto}}</li>
+    % end
+</ul>
+
+<br>
+<h1>Dodaj izdelek</h1>
+
+<form action="/dodaj_izdelek/" method="post">
+<table class="table">
+    <tr><td>Ime kategorije:</td> <td><input type="text" name="kategorija"></td></tr>
+    <tr><td>Ime izdelka:</td> <td><input type="text" name="izdelek"></td></tr>
+    <tr><td>Nabavna cena:</td> <td><input type="text" name="nabavna"></td></tr>
+    <tr><td>Prodajna cena:</td> <td><input type="text" name="prodajna"></td></tr>
+    <tr><td>Kolicina:</td> <td><input type="text" name="kolicina"></td></tr>
+    <tr><td></td> <td><input type="submit" value="Dodaj izdelek"></td></tr>
+</table>
+</form>
+
+<h1>Seštej količine</h1>
+Glede na inventuro preverimo, če vse štima.
+<form action="/sestej/" method="post">
+<table class="table">
+    <tr><td>Ime kategorije:</td> <td><input type="text" name="kategorija_sestej"></td></tr>
+    <tr><td>Ime izdelka:</td> <td><input type="text" name="izdelek_sestej"></td></tr>
+    <tr><td></td> <td><input type="submit" value="Preveri zalogo"></td></tr>
+</table>
+</form>
+
+% if vse_OK == True:
+<div style="color: green">{{sporocilo}}</div>
+% elif vse_OK == False:
+<div style="color: red">{{sporocilo}}</div>
+
+
+</body>
+</html>
