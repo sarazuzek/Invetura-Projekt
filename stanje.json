@@ -1,0 +1,33 @@
+{
+    "izdelki": [
+        {
+            "kategorija" : "pijaca",
+            "ime" : "sok",
+            "nabavna cena": 0.5,
+            "prodajna cena": 1.3,
+            "kolicina" : 10
+        },
+        {
+            "kategorija" : "meso",
+            "ime" : "kura",
+            "nabavna cena": 2.3,
+            "prodajna cena": 4,
+            "kolicina": 15
+        }
+    ],
+    "vsi racuni": [
+        {
+            "kategorija": "pijaca",
+            "izdelek": "sok",
+            "kolicina": 3,
+            "skupna vrednost": 3.9
+        }
+    ],
+    "inventura": [
+        {
+            "kategorija": "meso",
+            "izdelek": "kura",
+            "kolicina": 15
+        }
+    ]
+}
