@@ -1,39 +1,39 @@
 import json
 
-class Uporabnik:
-    def __init__(self, uporabnisko_ime, zasifrirano_geslo, inventura):
-        self.uporabnisko_ime = uporabnisko_ime
-        self.zasifrirano_geslo = zasifrirano_geslo
-        self.inventura = inventura
+# class Uporabnik:
+#     def __init__(self, uporabnisko_ime, zasifrirano_geslo, inventura):
+#         self.uporabnisko_ime = uporabnisko_ime
+#         self.zasifrirano_geslo = zasifrirano_geslo
+#         self.inventura = inventura
 
-    def preveri_geslo(self, zasifrirano_geslo):
-        if self.zasifrirano_geslo != zasifrirano_geslo:
-            raise ValueError('Vnesli ste napačno geslo. Poizkusite znova.')
+#     def preveri_geslo(self, zasifrirano_geslo):
+#         if self.zasifrirano_geslo != zasifrirano_geslo:
+#             raise ValueError('Vnesli ste napačno geslo. Poizkusite znova.')
 
-    def shrani_stanje(self, ime_datoteke):
-        slovar_stanja = {
-            'uporabnisko_ime' : self.uporabnisko_ime,
-            'zasifrirano_geslo' : self.zasifrirano_geslo,
-            'inventura': self.inventura.slovar_s_stanjem()
-        }
-        with open(ime_datoteke, 'w', encoding='utf-8') as datoteka:
-            json.dump(slovar_stanja, datoteka, ensure_ascii=False, indent=4)
+#     def shrani_stanje(self, ime_datoteke):
+#         slovar_stanja = {
+#             'uporabnisko_ime' : self.uporabnisko_ime,
+#             'zasifrirano_geslo' : self.zasifrirano_geslo,
+#             'inventura': self.inventura.slovar_s_stanjem()
+#         }
+#         with open(ime_datoteke, 'w', encoding='utf-8') as datoteka:
+#             json.dump(slovar_stanja, datoteka, ensure_ascii=False, indent=4)
     
-    @classmethod
-    def nalozi_stanje(cls, ime_datoteke):
-        with open(ime_datoteke) as datoteka:
-            slovar_stanja = json.load(datoteka)
-        uporabnisko_ime = slovar_stanja['uporabnisko_ime']
-        zasifrirano_geslo = slovar_stanja['zasifrirano_geslo']
-        inventura = Inventura.nalozi_iz_slovarja(slovar_stanja['inventura'])
-        return cls(uporabnisko_ime, zasifrirano_geslo, inventura)
+#     @classmethod
+#     def nalozi_stanje(cls, ime_datoteke):
+#         with open(ime_datoteke) as datoteka:
+#             slovar_stanja = json.load(datoteka)
+#         uporabnisko_ime = slovar_stanja['uporabnisko_ime']
+#         zasifrirano_geslo = slovar_stanja['zasifrirano_geslo']
+#         inventura = Inventura.nalozi_iz_slovarja(slovar_stanja['inventura'])
+#         return cls(uporabnisko_ime, zasifrirano_geslo, inventura)
 
 
 class Inventura: 
     def __init__(self):
         self.inventura = {}
         self.vsi_racuni = {}
-        self.izdelki = {} #slovar bo izgledal takole: self.izdelki = {("kat", "ime"): (nab, prod, kolicina)}
+        self.izdelki = {} #slovar bo izgledal takole: self.izdelki = {("kat", "ime"): [nab, prod, kolicina]}
 
     def dodaj_izdelek(self, kategorija, ime, nabavna_cena, prodajna_cena, kolicina):
         try:
@@ -141,9 +141,9 @@ class Inventura:
 
     def sestej_kolicine(self, kategorija, izdelek):    
         self._preveri_(kategorija, izdelek)
-        inventura_izdelek = self.inventura[(kategorija, izdelek)][0]  #'int' object is not subscriptable
+        inventura_izdelek = self.inventura[(kategorija, izdelek)]
         na_zacetku = self.izdelki[(kategorija, izdelek)][2]
-        if invetura_izdelek != na_zacetku:
+        if inventura_izdelek != na_zacetku:
             raise ValueError(f'Pri izdelku {izdelek} se nekaj ne ujema!')
     
     def _preveri_(self, kategorija, izdelek):
@@ -196,7 +196,7 @@ class Inventura:
 
     def slovar_s_stanjem(self):   
         return {
-            'vsi izdelki' : [{
+            'izdelki' : [{
                 'kategorija' : k[0],
                 'ime': k[1],
                 'nabava cena' : v[0],
@@ -219,8 +219,8 @@ class Inventura:
     @classmethod 
     def nalozi_iz_slovarja(cls, slovar_s_stanjem):
         inventura = cls()
-        for izdelek in slovar_s_stanjem['vsi izdelki']:
-            nov_izdelek = inventura.dodaj_izdelek(
+        for izdelek in slovar_s_stanjem['izdelki']:
+            inventura.dodaj_izdelek(
                 izdelek['kategorija'],
                 izdelek['ime'],
                 izdelek['nabavna cena'],
@@ -228,17 +228,17 @@ class Inventura:
                 izdelek['kolicina']
             )
         for racun in slovar_s_stanjem['vsi racuni']:
-            nov_racun = inventura.dodaj_racun(
-                racun['kategorija'],
-                racun['izdelek'],
-                racun['kolicina'],
-                racun['skupna vrednost']
-            )
-        for inventura in slovar_s_stanjem['inventura']:
-            nova_inventura = inventura.dodaj_inventuro(
-                inventura['kategorija'],
-                inventura['izdelek'],
-                inventura['kolicina']
+            inventura.vsi_racuni[(
+                racun['kategorija'], 
+                racun['izdelek']
+                )] = 
+                [racun['kolicina'], 
+                racun['skupna vrednost']]
+        for inv in slovar_s_stanjem['inventura']:
+            inventura.dodaj_inventuro(
+                inv['kategorija'],
+                inv['izdelek'],
+                inv['kolicina']
             )
         return inventura
 
