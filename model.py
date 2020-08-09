@@ -228,12 +228,7 @@ class Inventura:
                 izdelek['kolicina']
             )
         for racun in slovar_s_stanjem['vsi racuni']:
-            inventura.vsi_racuni[(
-                racun['kategorija'], 
-                racun['izdelek']
-                )] = 
-                [racun['kolicina'], 
-                racun['skupna vrednost']]
+            inventura.vsi_racuni[(racun['kategorija'], racun['izdelek'])] = [racun['kolicina'], racun['skupna vrednost']]
         for inv in slovar_s_stanjem['inventura']:
             inventura.dodaj_inventuro(
                 inv['kategorija'],
