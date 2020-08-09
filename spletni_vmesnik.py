@@ -22,13 +22,38 @@ def dodaj_izdelek():
     inventura.dodaj_izdelek(kategorija, izdelek, nabavna, prodajna, kolicina)
     bottle.redirect('/')
 
+@bottle.post('/odstrani-izdelek/')
+def odstrani_izdelek():
+    kategorija
+    ime
+    inventura.odstrani_izdelek(kategorija, ime) #ne odstrani
+    bottle.redirect('/')
+
+@bottle.post('/prenesi-izdelek/')
+def prenesi_izdelek():
+    kategorija1 
+    kategorija2 
+    izdelek 
+    inventura.prenesi_izdelek(kategorija1, kategorija2, izdelek)
+    bottle.redirect('/')
+
+
 @bottle.post('/dodaj-racun/')  #ne doda med račune
 def dodaj_racun():
     kategorija = bottle.request.forms.getunicode("kategorija_racun")
     izdelek = bottle.request.forms.getunicode("izdelek_racun")
     kolicina = int(bottle.request.forms["kolicina_racun"])
-    popust = float(bottle.request.forms["popust"])
+    popust = int(bottle.request.forms["popust"])
     inventura.dodaj_racun(kategorija, izdelek, kolicina, popust=0, prodaj_po_nabavni=False)
+    bottle.redirect('/')
+
+@bottle.post('/storniraj-racun/')
+def storniraj_racun():
+    kategorija = bottle.request.forms.getunicode("kategorija")
+    izdelek = bottle.request.forms.getunicode("izdelek")
+    kolicina = int(bottle.request.forms["kolicina"])
+    popust = int(bottle.request.forms["popust"])
+    inventura.storniraj_racun(kategorija, izdelek, kolicina, popust)
     bottle.redirect('/')
 
 @bottle.post('/dodaj-inventuro/') 
@@ -51,6 +76,13 @@ def sestej():
     except ValueError:
         vse_OK = False
         sporocilo = "Inventura za izdelek {} iz {} se ne ujema!".format(izdelek, kategorija)
+    bottle.redirect('/')
+
+@bottle.post('/dobicek-izdelek/')  
+def dobicek_izdelek():
+    kategorija = bottle.request.forms.getunicode("kategorija")
+    izdelek = bottle.request.forms.getunicode("izdelek")
+    inventura.dobicek_na_izdelku(kategorija,izdelek)
     bottle.redirect('/')
 
 

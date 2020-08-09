@@ -26,9 +26,16 @@ INVENTURA
         <td>{{podatki[0]}}</td>
         <td>{{podatki[1]}}</td>
         <td>{{podatki[2]}}</td>
+        <td> 
+            <form action="/odstrani-izdelek/" method="POST">
+                <input type="hidden" value="{{izdelek[0]}}">
+                <input type="submit" value="Odstrani">
+            </form>
+        </td>
     </tr>
     % end
 </table>
+
 
 <br>
 <h1>Dodaj izdelek</h1>
@@ -41,6 +48,25 @@ INVENTURA
     <tr><td>Prodajna cena:</td> <td><input type="text" name="prodajna"></td></tr>
     <tr><td>Količina:</td> <td><input type="text" name="kolicina"></td></tr>
     <tr><td></td> <td><input type="submit" value="Dodaj izdelek"></td></tr>
+</table>
+</form>
+
+
+<br>
+<h1>Prenesi izdelek</h1>
+
+<form action="/prenesi-izdelek/" method="POST">
+<table class="table">
+    <td> 
+        % include('_prenesi_kategorijo.html', id='kategorija1', oznaka='Prenesi iz')
+    </td>
+    <td> 
+        % include('_prenesi_kategorijo.html', id='kategorija2', oznaka='Prenesi v')
+    </td>
+    <td> 
+        % include('_prenesi_izdelek.html', id='izdelek', oznaka='Izdelek')
+    </td>
+    <td><input type="submit" value="Prenesi"></td>
 </table>
 </form>
 
@@ -64,6 +90,7 @@ INVENTURA
     % end
 </table>
 
+
 <br>
 <h1>Dodaj račun</h1>
 
@@ -77,6 +104,19 @@ INVENTURA
 </table>
 </form>
 
+
+<br>
+<h1>Storniraj račun</h1>
+
+<form action="/storniraj-racun/" method="POST">
+<table class="table">
+    <tr><td>Ime kategorije:</td> <td><input type="text" name="kategorija"></td></tr>
+    <tr><td>Ime izdelka:</td> <td><input type="text" name="izdelek"></td></tr>
+    <tr><td>Količina:</td> <td><input type="text" name="kolicina"></td></tr>
+    <tr><td>Popust:</td> <td><input type="text" name="popust"></td></tr>
+    <tr><td></td> <td><input type="submit" value="Storniraj račun"></td></tr>
+</table>
+</form>
 
 
 <h1>Inventure</h1>
@@ -109,8 +149,19 @@ INVENTURA
 </table>
 </form>
 
+<h1>Dobiček na izdelku</h1>
+
+<form action="/dobicek-izdelek/" method="POST">
+<table class="table">
+    <tr><td>Ime kategorije:</td> <td><input type="text" name="kategorija"></td></tr>
+    <tr><td>Ime izdelka:</td> <td><input type="text" name="izdelek"></td></tr>
+    <tr><td></td> <td><input type="submit" value="Izračunaj dobiček"></td></tr>
+</table>
+</form>
+
 
 <h1>Seštej količine</h1>
+
 Glede na inventuro preverimo, če vse štima.
 <form action="/sestej/" method="post">
 <table class="table">
@@ -123,6 +174,10 @@ Glede na inventuro preverimo, če vse štima.
 <div style="color: green">{{sporocilo}}</div>
 % elif vse_OK == False:
 <div style="color: red">{{sporocilo}}</div>
+
+
+
+
 
 
 </body>

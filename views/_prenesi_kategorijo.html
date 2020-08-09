@@ -1,0 +1,9 @@
+<label for="{{id}}">{{oznaka}}: </label>
+
+<select name="{{id}}" id="{{id}}">
+    % for izdelek in inventura.izdelki.keys():
+    <option value="{{izdelek[0]}}">
+        {{izdelek[0]}}
+    </option>
+    % end
+</select>
