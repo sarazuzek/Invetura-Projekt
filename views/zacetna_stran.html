@@ -12,6 +12,13 @@ INVENTURA
 <h1>Izdelki</h1>
 
 <table class="table">
+    <tr>
+        <th>Kategorija</th>
+        <th>Ime izdelka</th>
+        <th>Nabavna cena</th>
+        <th>Prodajna cena</th>
+        <th>Količina zaloge</th>
+    </tr>
     % for izdelek, podatki in inventura.izdelki.items():
     <tr>
         <td>{{izdelek[0]}}</td>
@@ -23,33 +30,85 @@ INVENTURA
     % end
 </table>
 
-<h1>Računi</h1>
-<ul>
-    % for izdelek, cene in inventura.vsi_racuni.items():
-    <li>{{izdelek[0]}}, {{izdelek[1]}}, {{cene[0]}}, {{cene[1]}}</li>
-    % end
-</ul>
-
-<h1>Inventure</h1>
-<ul>
-    % for izdelek, presteto in inventura.inventura.items():
-    <li>{{izdelek[0]}}, {{izdelek[1]}}, {{presteto}}</li>
-    % end
-</ul>
-
 <br>
 <h1>Dodaj izdelek</h1>
 
-<form action="/dodaj_izdelek/" method="post">
+<form action="/dodaj-izdelek/" method="post">
 <table class="table">
     <tr><td>Ime kategorije:</td> <td><input type="text" name="kategorija"></td></tr>
     <tr><td>Ime izdelka:</td> <td><input type="text" name="izdelek"></td></tr>
     <tr><td>Nabavna cena:</td> <td><input type="text" name="nabavna"></td></tr>
     <tr><td>Prodajna cena:</td> <td><input type="text" name="prodajna"></td></tr>
-    <tr><td>Kolicina:</td> <td><input type="text" name="kolicina"></td></tr>
+    <tr><td>Količina:</td> <td><input type="text" name="kolicina"></td></tr>
     <tr><td></td> <td><input type="submit" value="Dodaj izdelek"></td></tr>
 </table>
 </form>
+
+
+<h1>Računi</h1>
+
+<table class="table">
+    <tr>
+        <th>Kategorija</th>
+        <th>Ime izdelka</th>
+        <th>Količina prodanega</th>
+        <th>Skupna vrednost</th>
+    </tr>
+    % for izdelek, cene in inventura.vsi_racuni.items():
+    <tr>
+        <td>{{izdelek[0]}}</td>
+        <td>{{izdelek[1]}}</td>
+        <td>{{cene[0]}}</td>
+        <td>{{cene[1]}}</td>
+    </tr>
+    % end
+</table>
+
+<br>
+<h1>Dodaj račun</h1>
+
+<form action="/dodaj-racun/" method="post">
+<table class="table">
+    <tr><td>Ime kategorije:</td> <td><input type="text" name="kategorija_racun"></td></tr>
+    <tr><td>Ime izdelka:</td> <td><input type="text" name="izdelek_racun"></td></tr>
+    <tr><td>Količina:</td> <td><input type="text" name="kolicina_racun"></td></tr>
+    <tr><td>Popust:</td> <td><input type="text" name="popust"></td></tr>
+    <tr><td></td> <td><input type="submit" value="Dodaj račun"></td></tr>
+</table>
+</form>
+
+
+
+<h1>Inventure</h1>
+
+<table class="table">
+    <tr>
+        <th>Kategorija</th>
+        <th>Ime izdelka</th>
+        <th>Količina zaloge</th>
+    </tr>
+    % for izdelek, presteto in inventura.inventura.items():
+    <tr>
+        <td>{{izdelek[0]}}</td>
+        <td>{{izdelek[1]}}</td>
+        <td>{{presteto}}</td>
+    </tr>
+    % end
+</table>
+
+
+<br>
+<h1>Dodaj inventuro</h1>
+
+<form action="/dodaj-inventuro/" method="post">
+<table class="table">
+    <tr><td>Ime kategorije:</td> <td><input type="text" name="kategorija_inv"></td></tr>
+    <tr><td>Ime izdelka:</td> <td><input type="text" name="izdelek_inv"></td></tr>
+    <tr><td>Količina:</td> <td><input type="text" name="kolicina_inv"></td></tr>
+    <tr><td></td> <td><input type="submit" value="Dodaj inventuro"></td></tr>
+</table>
+</form>
+
 
 <h1>Seštej količine</h1>
 Glede na inventuro preverimo, če vse štima.
@@ -60,7 +119,6 @@ Glede na inventuro preverimo, če vse štima.
     <tr><td></td> <td><input type="submit" value="Preveri zalogo"></td></tr>
 </table>
 </form>
-
 % if vse_OK == True:
 <div style="color: green">{{sporocilo}}</div>
 % elif vse_OK == False:
