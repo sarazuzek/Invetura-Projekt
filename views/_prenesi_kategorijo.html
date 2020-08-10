@@ -1,9 +1,13 @@
 <label for="{{id}}">{{oznaka}}: </label>
 
 <select name="{{id}}" id="{{id}}">
-    % for izdelek in inventura.izdelki.keys():
-    <option value="{{izdelek[0]}}">
-        {{izdelek[0]}}
+    % dodane_kategorije = []
+    % for kategorija, izdelek in inventura.izdelki.keys():
+    % if kategorija not in dodane_kategorije:
+    <option value="{{kategorija}}">
+        {{kategorija}}
+        % dodane_kategorije.append(kategorija)
     </option>
+    % end
     % end
 </select>

@@ -79,6 +79,12 @@ class Inventura:
         kolicina = self.izdelki[(kategorija1, ime)][2]
         self.izdelki[(kategorija2, ime)] = [nabavna_cena, prodajna_cena, kolicina]  
         del self.izdelki[(kategorija1, ime)]
+        # uredimo še račune
+        for izdelek, racuni in self.vsi_racuni.items():
+            if izdelek == (kategorija1, ime):
+                popravi_racune = racuni
+        self.vsi_racuni[(kategorija2, ime)] = popravi_racune
+        del self.vsi_racuni[(kategorija1,ime)]
 
     def _preveri_izdelek_v_kategoriji(self, ime, kategorija):
         if (kategorija, ime) not in self.izdelki:
@@ -88,15 +94,12 @@ class Inventura:
         if (kategorija, ime) in self.izdelki:
             raise ValueError(f'{ime} je že v kategoriji {kategorija}!')
 
-    def dodaj_racun(self, kategorija, izdelek, kolicina, popust=0, prodaj_po_nabavni=False):
+    def dodaj_racun(self, kategorija, izdelek, kolicina, popust=0):
         self._preveri_stevilke(kolicina, popust)
         self._preveri_izdelek(kategorija, izdelek, kolicina) #vrne error če izdelk ni ali ga ni dovolj na zalogi
         nabavna_cena = self.izdelki[(kategorija, izdelek)][0]
         prodajna_cena = self.izdelki[(kategorija, izdelek)][1]
-        if prodaj_po_nabavni:
-            skupna_vrednost = kolicina * nabavna_cena
-        else:
-            skupna_vrednost = kolicina * prodajna_cena * (1 - popust / 100)
+        skupna_vrednost = round(kolicina * prodajna_cena * (1 - popust / 100), 2)
         if (kategorija, izdelek) in self.vsi_racuni:
             self.vsi_racuni[(kategorija, izdelek)].append([kolicina, skupna_vrednost])
         else:
@@ -123,12 +126,12 @@ class Inventura:
     def storniraj_racun(self, kategorija, izdelek, popravljna_kolicina, popravljen_popust=0):
         #ta funkcija popravi zadnji vnešen račun za izdelek v kategoriji (če se zmotiš pri vnosu)
         stara_kolicina = self.vsi_racuni[(kategorija, izdelek)][-1][0]
+        self.izdelki[(kategorija, izdelek)][2] += stara_kolicina
         if (kategorija, izdelek) in self.vsi_racuni:
             self.vsi_racuni[(kategorija, izdelek)].pop()
         else:
             raise ValueError(f'Izdelka {izdelek} ni med računi!')
         self.dodaj_racun(kategorija, izdelek, popravljna_kolicina, popravljen_popust)
-        self.izdelki[(kategorija, izdelek)][2] += stara_kolicina
         
     def dodaj_inventuro(self, kategorija, izdelek, kolicina):
         self._preveri_izdelek(kategorija, izdelek) #preveri ali izdelek obstaja na seznamu vseh izdelkov
@@ -184,7 +187,10 @@ class Inventura:
         dobicek = 0
         for izdelek in kategorije[kategorija]:
             ime_izdelka = izdelek[0]
-            dobicek += self.dobicek_na_izdelku(kategorija, ime_izdelka)
+            try:
+                dobicek += self.dobicek_na_izdelku(kategorija, ime_izdelka)
+            except KeyError:
+                dobicek += 0
         return dobicek
 
     def celoten_dobicek(self):
@@ -227,8 +233,12 @@ class Inventura:
                 izdelek['prodajna cena'],
                 izdelek['kolicina']
             )
+        
         for racun in slovar_s_stanjem['vsi racuni']:
-            inventura.vsi_racuni[(racun['kategorija'], racun['izdelek'])] = [racun['kolicina'], racun['skupna vrednost']]
+            if (racun['kategorija'], racun['izdelek']) in inventura.vsi_racuni:
+                inventura.vsi_racuni[(racun['kategorija'], racun['izdelek'])].append([racun['kolicina'], racun['skupna vrednost']])
+            else:
+                inventura.vsi_racuni[(racun['kategorija'], racun['izdelek'])] = [[racun['kolicina'], racun['skupna vrednost']]]
         for inv in slovar_s_stanjem['inventura']:
             inventura.dodaj_inventuro(
                 inv['kategorija'],

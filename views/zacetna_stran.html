@@ -28,7 +28,7 @@ INVENTURA
         <td>{{podatki[2]}}</td>
         <td> 
             <form action="/odstrani-izdelek/" method="POST">
-                <input type="hidden" value="{{izdelek[0]}}">
+                <input type="hidden" value="{{kategorija}}">
                 <input type="submit" value="Odstrani">
             </form>
         </td>
@@ -81,12 +81,14 @@ INVENTURA
         <th>Skupna vrednost</th>
     </tr>
     % for izdelek, cene in inventura.vsi_racuni.items():
+    % for racun in cene:
     <tr>
         <td>{{izdelek[0]}}</td>
         <td>{{izdelek[1]}}</td>
-        <td>{{cene[0]}}</td>
-        <td>{{cene[1]}}</td>
+        <td>{{racun[0]}}</td>
+        <td>{{racun[1]}}</td>
     </tr>
+    % end
     % end
 </table>
 
@@ -149,16 +151,6 @@ INVENTURA
 </table>
 </form>
 
-<h1>Dobiček na izdelku</h1>
-
-<form action="/dobicek-izdelek/" method="POST">
-<table class="table">
-    <tr><td>Ime kategorije:</td> <td><input type="text" name="kategorija"></td></tr>
-    <tr><td>Ime izdelka:</td> <td><input type="text" name="izdelek"></td></tr>
-    <tr><td></td> <td><input type="submit" value="Izračunaj dobiček"></td></tr>
-</table>
-</form>
-
 
 <h1>Seštej količine</h1>
 
@@ -173,7 +165,56 @@ Glede na inventuro preverimo, če vse štima.
 % if vse_OK == True:
 <div style="color: green">{{sporocilo}}</div>
 % elif vse_OK == False:
-<div style="color: red">{{sporocilo}}</div>
+<div style="color: red">{{sporocilo}}</div>  
+% end
+
+
+<h1>Dobiček na izdelku</h1>
+
+<form action="/dobicek-izdelek/" method="POST">
+<table class="table">
+    <tr><td>Ime kategorije:</td> <td><input type="text" name="kategorija"></td></tr>
+    <tr><td>Ime izdelka:</td> <td><input type="text" name="izdelek"></td></tr>
+    <tr><td></td> <td><input type="submit" value="Izračunaj dobiček"></td></tr>
+</table>
+</form>
+
+
+% if dobicek_izd:
+<div>{{sporocilo}}</div>
+% end
+
+
+<h1>Dobiček na kategorijo</h1>
+
+<form action="/dobicek-kategorija/" method="POST">
+<table class="table">
+    <td>
+        % include('_prenesi_kategorijo.html', id='kategorija', oznaka='Kategorija')
+    </td>
+    <td><input type="submit" value="Izračunaj dobiček"></td>
+</table>
+</form>
+
+% if dobicek_kat:
+<div>{{sporocilo}}</div>
+% end
+
+
+<h1>Celoten dobiček</h1>
+
+<form action="/celoten-dobicek/" method="POST">
+<table class="table">
+    <td><input type="submit" value="Izračunaj dobiček"></td>
+</table>
+</form>
+
+% if celoten_dobicek:
+<div>{{sporocilo}}</div>
+% end
+
+
+
 
 
 
