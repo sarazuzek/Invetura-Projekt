@@ -1,0 +1,54 @@
+% rebase('base.html', izbrani_zavihek='dobicek')
+
+
+<html>
+<h1>Dobiček na izdelku</h1>
+
+<form action="/dobicek-izdelek/" method="POST">
+<table class="table">
+    <tr><td>Ime kategorije:</td> <td><input type="text" name="kategorija"></td></tr>
+    <tr><td>Ime izdelka:</td> <td><input type="text" name="izdelek"></td></tr>
+    <tr><td></td> <td><input type="submit" value="Izračunaj dobiček"></td></tr>
+</table>
+</form>
+
+
+% if dobicek_izd:
+<div>{{sporocilo}}</div>
+% end
+
+
+<h1>Dobiček na kategorijo</h1>
+
+<form action="/dobicek-kategorija/" method="POST">
+<table class="table">
+    <td>
+        % include('_prenesi_kategorijo.html', id='kategorija', oznaka='Kategorija')
+    </td>
+    <td><input type="submit" value="Izračunaj dobiček"></td>
+</table>
+</form>
+
+% if dobicek_kat:
+<div>{{sporocilo}}</div>
+% end
+
+
+<h1>Celoten dobiček</h1>
+
+<form action="/celoten-dobicek/" method="POST">
+<table class="table">
+    <td><input type="submit" value="Izračunaj dobiček"></td>
+</table>
+</form>
+
+% if celoten_dobicek:
+<div>{{sporocilo}}</div>
+% end
+
+</html>
+
+
+
+
+

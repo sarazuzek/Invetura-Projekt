@@ -1,0 +1,55 @@
+% rebase('base.html', izbrani_zavihek='racuni')
+
+
+<html>
+
+<h1>Računi</h1>
+
+<table class="table">
+    <tr>
+        <th>Kategorija</th>
+        <th>Ime izdelka</th>
+        <th>Količina prodanega</th>
+        <th>Skupna vrednost</th>
+    </tr>
+    % for izdelek, cene in inventura.vsi_racuni.items():
+    % for racun in cene:
+    <tr>
+        <td>{{izdelek[0]}}</td>
+        <td>{{izdelek[1]}}</td>
+        <td>{{racun[0]}}</td>
+        <td>{{racun[1]}}</td>
+    </tr>
+    % end
+    % end
+</table>
+
+
+<br>
+<h1>Dodaj račun</h1>
+
+<form action="/dodaj-racun/" method="post">
+<table class="table">
+    <tr><td>Ime kategorije:</td> <td><input type="text" name="kategorija"></td></tr>
+    <tr><td>Ime izdelka:</td> <td><input type="text" name="izdelek"></td></tr>
+    <tr><td>Količina:</td> <td><input type="text" name="kolicina"></td></tr>
+    <tr><td>Popust:</td> <td><input type="text" name="popust"></td></tr>
+    <tr><td></td> <td><input type="submit" value="Dodaj račun"></td></tr>
+</table>
+</form>
+
+
+<br>
+<h1>Storniraj račun</h1>
+
+<form action="/storniraj-racun/" method="POST">
+<table class="table">
+    <tr><td>Ime kategorije:</td> <td><input type="text" name="kategorija"></td></tr>
+    <tr><td>Ime izdelka:</td> <td><input type="text" name="izdelek"></td></tr>
+    <tr><td>Količina:</td> <td><input type="text" name="kolicina"></td></tr>
+    <tr><td>Popust:</td> <td><input type="text" name="popust"></td></tr>
+    <tr><td></td> <td><input type="submit" value="Storniraj račun"></td></tr>
+</table>
+</form>
+
+</html>

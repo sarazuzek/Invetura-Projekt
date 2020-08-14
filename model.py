@@ -83,8 +83,8 @@ class Inventura:
         for izdelek, racuni in self.vsi_racuni.items():
             if izdelek == (kategorija1, ime):
                 popravi_racune = racuni
-        self.vsi_racuni[(kategorija2, ime)] = popravi_racune
-        del self.vsi_racuni[(kategorija1,ime)]
+                self.vsi_racuni[(kategorija2, ime)] = popravi_racune
+                del self.vsi_racuni[(kategorija1,ime)]
 
     def _preveri_izdelek_v_kategoriji(self, ime, kategorija):
         if (kategorija, ime) not in self.izdelki:
