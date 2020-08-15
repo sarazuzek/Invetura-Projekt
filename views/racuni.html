@@ -1,55 +1,86 @@
 % rebase('base.html', izbrani_zavihek='racuni')
 
+<div class="columns is-mobile is-multiline">
+    <div class="column is-one-fifth">
+      <nav class="panel">
+        <p class="panel-heading">
+          <i class="fas fa-file-invoice"></i>
+          Storniraj račun
+        </p>
+        <div class="panel-block">
+          <form action="/storniraj-racun/" method="POST">
+            <div class="field">
+              <input class="input" type="text" name="kategorija" placeholder="Ime kategorije">
+            </div>
+            <div class="field">
+              <input class="input" type="text" name="izdelek" placeholder="Ime izdelka">
+            </div>
+            <div class="field">
+                <input class="input" type="text" name="kolicina" placeholder="Količina">
+              </div>
+              <div class="field">
+                <input class="input" type="text" name="popust" placeholder="Popust">
+              </div>
+            <div class="field">
+              <div class="control">
+                <button class="button is-warning is-light is-fullwidth" class="button is-danger">Storniraj račun</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </nav>
+    </div>
 
-<html>
+      <div class="column is-four-fifth">
+        <table class="table is-fullwidth">
+          <div class="tile is-child box">
+            <p class="title">Računi</p>
+          </div>
+          <thead>
+            <tr>
+              <th>Kategorija</th>
+              <th>Ime izdelka</th>
+              <th>Količina prodanega</th>
+              <th>Skupna vrednost</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            % for izdelek, cene in inventura.vsi_racuni.items():
+            % for racun in cene:
+              <tr>
+                <td>{{izdelek[0]}}</td>
+                <td>{{izdelek[1]}}</td>
+                <td>{{racun[0]}}</td>
+                <td>{{racun[1]}}</td>
+                <td></td>
+              </tr>
+            % end
+            % end
+            <form action="/dodaj-racun/" method="POST">
+                <tr>
+                  <td>
+                    <input class="input" type="text" name="kategorija" placeholder="Ime kategorije">
+                  </td>
+                  <td>
+                    <input class="input" type="text" name="izdelek" placeholder="Ime izdelka">
+                  </td>
+                  <td>
+                    <input class="input" type="text" name="kolicina" placeholder="Količina">
+                  </td>
+                  <td>
+                    <input class="input" type="text" name="popust" placeholder="Popust">
+                  </td>
+                  <td>
+                    <div class="control">
+                      <button class="button is-info is-small">Dodaj</button>
+                    </div>
+                  </td>
+                </tr>
+            </form>
+          </tbody>
+        </table>
+      </div>
+</div>
 
-<h1>Računi</h1>
 
-<table class="table">
-    <tr>
-        <th>Kategorija</th>
-        <th>Ime izdelka</th>
-        <th>Količina prodanega</th>
-        <th>Skupna vrednost</th>
-    </tr>
-    % for izdelek, cene in inventura.vsi_racuni.items():
-    % for racun in cene:
-    <tr>
-        <td>{{izdelek[0]}}</td>
-        <td>{{izdelek[1]}}</td>
-        <td>{{racun[0]}}</td>
-        <td>{{racun[1]}}</td>
-    </tr>
-    % end
-    % end
-</table>
-
-
-<br>
-<h1>Dodaj račun</h1>
-
-<form action="/dodaj-racun/" method="post">
-<table class="table">
-    <tr><td>Ime kategorije:</td> <td><input type="text" name="kategorija"></td></tr>
-    <tr><td>Ime izdelka:</td> <td><input type="text" name="izdelek"></td></tr>
-    <tr><td>Količina:</td> <td><input type="text" name="kolicina"></td></tr>
-    <tr><td>Popust:</td> <td><input type="text" name="popust"></td></tr>
-    <tr><td></td> <td><input type="submit" value="Dodaj račun"></td></tr>
-</table>
-</form>
-
-
-<br>
-<h1>Storniraj račun</h1>
-
-<form action="/storniraj-racun/" method="POST">
-<table class="table">
-    <tr><td>Ime kategorije:</td> <td><input type="text" name="kategorija"></td></tr>
-    <tr><td>Ime izdelka:</td> <td><input type="text" name="izdelek"></td></tr>
-    <tr><td>Količina:</td> <td><input type="text" name="kolicina"></td></tr>
-    <tr><td>Popust:</td> <td><input type="text" name="popust"></td></tr>
-    <tr><td></td> <td><input type="submit" value="Storniraj račun"></td></tr>
-</table>
-</form>
-
-</html>
