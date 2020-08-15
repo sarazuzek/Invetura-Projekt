@@ -99,7 +99,7 @@ def sestej():
     except ValueError:
         vse_OK = False
         sporocilo = "Inventura za izdelek {} iz {} se ne ujema!".format(izdelek, kategorija)
-    bottle.redirect('/dobicek/')
+    bottle.redirect('/izdelki/')
 
 @bottle.post('/dobicek-izdelek/')  
 def dobicek_izdelek():

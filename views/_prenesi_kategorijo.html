@@ -1,13 +1,18 @@
-<label for="{{id}}">{{oznaka}}: </label>
-
-<select name="{{id}}" id="{{id}}">
-    % dodane_kategorije = []
-    % for kategorija, izdelek in inventura.izdelki.keys():
-    % if kategorija not in dodane_kategorije:
-    <option value="{{kategorija}}">
-        {{kategorija}}
-        % dodane_kategorije.append(kategorija)
-    </option>
-    % end
-    % end
-</select>
+<div class="control has-icons-left">
+    <div class="select is-fullwidth is-small">
+      <select name="{{id}}", id="{{id}}">
+        % if defined('oznaka'):
+        <option disabled selected>{{oznaka}}</option>
+        % end
+        % dodane_kategorije = []
+        % for kategorija,izdelek in inventura.izdelki.keys():
+        % if kategorija not in dodane_kategorije:
+          <option value="{{kategorija}}">
+            {{kategorija}}
+            % dodane_kategorije.append(kategorija)
+          </option>
+        % end
+        % end
+      </select>
+    </div>
+</div>

@@ -1,9 +1,14 @@
-<label for="{{id}}">{{oznaka}}: </label>
-
-<select name="{{id}}" id="{{id}}">
-    % for izdelek in inventura.izdelki.keys():
-    <option value="{{izdelek[1]}}">
-        {{izdelek[1]}}
-    </option>
-    % end
-</select>
+<div class="control has-icons-left">
+    <div class="select is-fullwidth is-small">
+      <select name="{{id}}" id="{{id}}">
+        % if defined('oznaka'):
+        <option disabled selected>{{oznaka}}</option>
+        % end
+        % for izdelek in inventura.izdelki.keys():
+          <option value="{{izdelek[1]}}">
+            {{izdelek[1]}}
+          </option>
+        % end
+      </select>
+    </div>
+</div>
