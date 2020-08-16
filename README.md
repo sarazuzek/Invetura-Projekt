@@ -1,5 +1,4 @@
-# Invetura
-Projektna naloga pri predmetu UVP - 1.letnik
+# Invetura - projektna naloga pri UVP
 Inventura je program, namenjen različnih vrstam trgovin, s pomočjo njega lahko vodijo evidenco izdelkov, računov in inventur, računajo dobičke.
 
 ## Navodila za zagon
@@ -18,6 +17,6 @@ Pri nastajanju CSS-ja sem se pomagala z urejevalnikom Bulma.
 1. Pri dodajanju računa se sproži napaka, če klikneš puščico nazaj in stran osvežiš je račun dodan
 
 ## Avtor
-Sara Žužek
+* **Sara Žužek**
 
 
