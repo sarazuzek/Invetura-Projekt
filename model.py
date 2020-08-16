@@ -205,7 +205,7 @@ class Inventura:
             'izdelki' : [{
                 'kategorija' : k[0],
                 'ime': k[1],
-                'nabava cena' : v[0],
+                'nabavna cena' : v[0],
                 'prodajna cena' : v[1],
                 'kolicina' : v[2]
             } for k,v in self.izdelki.items()],
