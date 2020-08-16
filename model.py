@@ -1,34 +1,5 @@
 import json
 
-# class Uporabnik:
-#     def __init__(self, uporabnisko_ime, zasifrirano_geslo, inventura):
-#         self.uporabnisko_ime = uporabnisko_ime
-#         self.zasifrirano_geslo = zasifrirano_geslo
-#         self.inventura = inventura
-
-#     def preveri_geslo(self, zasifrirano_geslo):
-#         if self.zasifrirano_geslo != zasifrirano_geslo:
-#             raise ValueError('Vnesli ste napačno geslo. Poizkusite znova.')
-
-#     def shrani_stanje(self, ime_datoteke):
-#         slovar_stanja = {
-#             'uporabnisko_ime' : self.uporabnisko_ime,
-#             'zasifrirano_geslo' : self.zasifrirano_geslo,
-#             'inventura': self.inventura.slovar_s_stanjem()
-#         }
-#         with open(ime_datoteke, 'w', encoding='utf-8') as datoteka:
-#             json.dump(slovar_stanja, datoteka, ensure_ascii=False, indent=4)
-    
-#     @classmethod
-#     def nalozi_stanje(cls, ime_datoteke):
-#         with open(ime_datoteke) as datoteka:
-#             slovar_stanja = json.load(datoteka)
-#         uporabnisko_ime = slovar_stanja['uporabnisko_ime']
-#         zasifrirano_geslo = slovar_stanja['zasifrirano_geslo']
-#         inventura = Inventura.nalozi_iz_slovarja(slovar_stanja['inventura'])
-#         return cls(uporabnisko_ime, zasifrirano_geslo, inventura)
-
-
 class Inventura: 
     def __init__(self):
         self.inventura = {}
@@ -85,6 +56,12 @@ class Inventura:
                 popravi_racune = racuni
                 self.vsi_racuni[(kategorija2, ime)] = popravi_racune
                 del self.vsi_racuni[(kategorija1,ime)]
+        # nekaj ne dela
+        # for izdelek, vrednost in self.inventura.items():
+        #     if izdelek == (kategorija1, ime):
+        #         popravi_inventuro = vrednost
+        #         self.inventura[(kategorija2, ime)] = popravi_inventuro
+        #         del self.inventura[(kategorija1, ime)]
 
     def _preveri_izdelek_v_kategoriji(self, ime, kategorija):
         if (kategorija, ime) not in self.izdelki:
@@ -217,8 +194,8 @@ class Inventura:
             } for k,v in self.vsi_racuni.items()],
             'inventura' : [{
                 'kategorija' : k[0],
-                'izdelek' : v[0],
-                'kolicina' : v[1]
+                'izdelek' : k[1],
+                'kolicina' : v
             } for k,v in self.inventura.items()]
         }
     
@@ -233,7 +210,6 @@ class Inventura:
                 izdelek['prodajna cena'],
                 izdelek['kolicina']
             )
-        
         for racun in slovar_s_stanjem['vsi racuni']:
             if (racun['kategorija'], racun['izdelek']) in inventura.vsi_racuni:
                 inventura.vsi_racuni[(racun['kategorija'], racun['izdelek'])].append([racun['kolicina'], racun['skupna vrednost']])

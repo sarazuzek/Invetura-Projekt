@@ -3,8 +3,8 @@ import random
 import os
 from model import Inventura
 
-
 inventure = {}
+
 for ime_datoteke in os.listdir('shranjene_inventure'):
     st_uporabnika, koncnica = os.path.splitext(ime_datoteke)
     inventure[st_uporabnika] = Inventura.nalozi_stanje(os.path.join
@@ -84,7 +84,6 @@ def prenesi_izdelek():
     inventura.prenesi_izdelek(kategorija1, kategorija2, izdelek)
     shrani_inventuro_uporabnika()
     bottle.redirect('/')
-
 
 @bottle.post('/dodaj-racun/')  
 def dodaj_racun():
