@@ -13,9 +13,6 @@ Inventura je program, namenjen različnih vrstam trgovin, s pomočjo njega lahko
 Pri projektu sem si pomagala z programom Proračunovodja, ki smo ga delali na predavanjih.
 Pri nastajanju CSS-ja sem se pomagala z urejevalnikom Bulma.
 
-### Znane težave
-1. Pri dodajanju računa se sproži napaka, če klikneš puščico nazaj in stran osvežiš je račun dodan
-
 ## Avtor
 * **Sara Žužek**
 
