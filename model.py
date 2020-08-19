@@ -28,7 +28,6 @@ class Uporabnik:
         inventura = Inventura.nalozi_iz_slovarja(slovar_stanja['inventura'])	
         return cls(uporabnisko_ime, zasifrirano_geslo, inventura)	
 
-
 class Inventura: 
     def __init__(self):
         self.inventura = {}
@@ -217,10 +216,10 @@ class Inventura:
             } for k,v in self.izdelki.items()],
             'vsi racuni' : [{
                 'kategorija' : k[0],
-                'izdelek': k[1],
-                'kolicina': v[0],
-                'skupna vrednost': v[1]
-            } for k,v in self.vsi_racuni.items()],
+                'izdelek' : k[1],
+                'kolicina' : v1[0],
+                'skupna vrednost' : v1[1]
+            } for k,v in self.vsi_racuni.items() for v1 in v],
             'inventura' : [{
                 'kategorija' : k[0],
                 'izdelek' : k[1],

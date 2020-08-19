@@ -8,10 +8,43 @@
                 "ime": "kura",
                 "nabavna cena": 1.0,
                 "prodajna cena": 2.0,
-                "kolicina": 20
+                "kolicina": 14
+            },
+            {
+                "kategorija": "meso",
+                "ime": "riba",
+                "nabavna cena": 2.0,
+                "prodajna cena": 20.0,
+                "kolicina": 98
+            },
+            {
+                "kategorija": "meso",
+                "ime": "sok",
+                "nabavna cena": 0.5,
+                "prodajna cena": 10.0,
+                "kolicina": 200
             }
         ],
-        "vsi racuni": [],
+        "vsi racuni": [
+            {
+                "kategorija": "meso",
+                "izdelek": "kura",
+                "kolicina": 1,
+                "skupna vrednost": 1.6
+            },
+            {
+                "kategorija": "meso",
+                "izdelek": "kura",
+                "kolicina": 2,
+                "skupna vrednost": 3.2
+            },
+            {
+                "kategorija": "meso",
+                "izdelek": "riba",
+                "kolicina": 2,
+                "skupna vrednost": 36.0
+            }
+        ],
         "inventura": [
             {
                 "kategorija": "meso",
