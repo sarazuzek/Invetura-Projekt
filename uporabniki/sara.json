@@ -1,0 +1,23 @@
+{
+    "uporabnisko_ime": "sara",
+    "zasifrirano_geslo": "8e0a937dc4dcf98ab660c6e4b54a4858ecc37cad498962a2b004022f33580044772ada625a8f0ff1c7fbf233321f31f6c6a9ec6f175fe94fb3853fb4254f5850",
+    "inventura": {
+        "izdelki": [
+            {
+                "kategorija": "meso",
+                "ime": "kura",
+                "nabavna cena": 1.0,
+                "prodajna cena": 2.0,
+                "kolicina": 20
+            }
+        ],
+        "vsi racuni": [],
+        "inventura": [
+            {
+                "kategorija": "meso",
+                "izdelek": "kura",
+                "kolicina": 10
+            }
+        ]
+    }
+}

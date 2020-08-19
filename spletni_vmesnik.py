@@ -1,27 +1,32 @@
 import bottle 
 import random
 import os
-from model import Inventura
+import hashlib
+from model import Inventura, Uporabnik
 
-inventure = {}
+imenik_s_podatki = 'uporabniki'
+uporabniki = {}
+skrivnost = 'TO JE ENA HUDA SKRIVNOST'
 
-for ime_datoteke in os.listdir('shranjene_inventure'):
-    st_uporabnika, koncnica = os.path.splitext(ime_datoteke)
-    inventure[st_uporabnika] = Inventura.nalozi_stanje(os.path.join
-    ('shranjene_inventure', ime_datoteke))
+if not os.path.isdir(imenik_s_podatki):
+    os.mkdir(imenik_s_podatki)
+
+for ime_datoteke in os.listdir(imenik_s_podatki):
+    uporabnik = Uporabnik.nalozi_stanje(os.path.join(imenik_s_podatki, ime_datoteke))
+    uporabniki[uporabnik.uporabnisko_ime] = uporabnik
+
+def trenutni_uporabnik():
+    uporabnisko_ime = bottle.request.get_cookie('uporabnisko_ime', secret=skrivnost)
+    if uporabnisko_ime is None:
+        bottle.redirect('/prijava/')
+    return uporabniki[uporabnisko_ime]
 
 def inventura_uporabnika():
-    st_uporabnika = bottle.request.get_cookie('st_uporabnika')
-    if st_uporabnika is None:
-        st_uporabnika = str(random.randint(0, 2 ** 40))
-        inventure[st_uporabnika] = Inventura()
-        bottle.response.set_cookie('st_uporabnika', st_uporabnika, path='/')
-    return inventure[st_uporabnika]
+    return trenutni_uporabnik().inventura
 
-def shrani_inventuro_uporabnika():
-    st_uporabnika = bottle.request.get_cookie('st_uporabnika')
-    inventura = inventure[st_uporabnika]
-    inventura.shrani_stanje(os.path.join('shranjene_inventure', f'{st_uporabnika}.json'))
+def shrani_trenutnega_uporabnika():
+    uporabnik = trenutni_uporabnik()
+    uporabnik.shrani_stanje(os.path.join('uporabniki', f'{uporabnik.uporabnisko_ime}.json'))
 
 @bottle.get('/')
 def zacetna_stran():
@@ -54,6 +59,35 @@ def dobicek():
 def pomoc():
     return bottle.template('pomoc.html')
 
+@bottle.get('/prijava/')
+def prijava_get():
+    return bottle.template('prijava.html')
+
+@bottle.post('/prijava/')
+def prijava_post():
+    uporabnisko_ime = bottle.request.forms.getunicode('uporabnisko_ime')
+    geslo = bottle.request.forms.getunicode('geslo')
+    h = hashlib.blake2b()
+    h.update(geslo.encode(encoding='utf-8'))
+    zasifrirano_geslo = h.hexdigest()
+    if 'nova_inventura' in bottle.request.forms and uporabnisko_ime not in uporabniki:
+        uporabnik = Uporabnik(
+            uporabnisko_ime,
+            zasifrirano_geslo,
+            Inventura()
+        )
+        uporabniki[uporabnisko_ime] = uporabnik
+    else:
+        uporabnik = uporabniki[uporabnisko_ime]
+        uporabnik.preveri_geslo(zasifrirano_geslo)
+    bottle.response.set_cookie('uporabnisko_ime', uporabnik.uporabnisko_ime, path='/', secret=skrivnost)
+    bottle.redirect('/')
+
+@bottle.post('/odjava/')
+def odjava():
+    bottle.response.delete_cookie('uporabnisko_ime', path='/')
+    bottle.redirect('/')
+
 @bottle.post('/dodaj-izdelek/')
 def dodaj_izdelek():
     inventura = inventura_uporabnika() 
@@ -63,7 +97,7 @@ def dodaj_izdelek():
     prodajna = float(bottle.request.forms["prodajna"])
     kolicina = int(bottle.request.forms["kolicina"])
     inventura.dodaj_izdelek(kategorija, izdelek, nabavna, prodajna, kolicina)
-    shrani_inventuro_uporabnika()
+    shrani_trenutnega_uporabnika()
     bottle.redirect('/')
 
 @bottle.post('/odstrani-izdelek/')
@@ -72,7 +106,7 @@ def odstrani_izdelek():
     kategorija = bottle.request.forms["kategorija"]
     ime = bottle.request.forms["ime"]
     inventura.odstrani_izdelek(kategorija, ime) 
-    shrani_inventuro_uporabnika()
+    shrani_trenutnega_uporabnika()
     bottle.redirect('/')
 
 @bottle.post('/prenesi-izdelek/')
@@ -82,7 +116,7 @@ def prenesi_izdelek():
     kategorija2 = bottle.request.forms.getunicode("kategorija2")
     izdelek = bottle.request.forms.getunicode("izdelek")
     inventura.prenesi_izdelek(kategorija1, kategorija2, izdelek)
-    shrani_inventuro_uporabnika()
+    shrani_trenutnega_uporabnika()
     bottle.redirect('/')
 
 @bottle.post('/dodaj-racun/')  
@@ -93,7 +127,7 @@ def dodaj_racun():
     kolicina = int(bottle.request.forms["kolicina"])
     popust = int(bottle.request.forms["popust"])
     inventura.dodaj_racun(kategorija, izdelek, kolicina, popust=popust)
-    shrani_inventuro_uporabnika()
+    shrani_trenutnega_uporabnika()
     bottle.redirect('/racuni/')
 
 @bottle.post('/storniraj-racun/')
@@ -104,7 +138,7 @@ def storniraj_racun():
     kolicina = int(bottle.request.forms["kolicina"])
     popust = int(bottle.request.forms["popust"])
     inventura.storniraj_racun(kategorija, izdelek, kolicina, popust)
-    shrani_inventuro_uporabnika()
+    shrani_trenutnega_uporabnika()
     bottle.redirect('/racuni/')
 
 @bottle.post('/dodaj-inventuro/') 
@@ -114,7 +148,7 @@ def dodaj_inventuro():
     izdelek = bottle.request.forms.getunicode("izdelek")
     kolicina = int(bottle.request.forms["kolicina"])
     inventura.dodaj_inventuro(kategorija, izdelek, kolicina)
-    shrani_inventuro_uporabnika()
+    shrani_trenutnega_uporabnika()
     bottle.redirect('/')
 
 @bottle.post('/sestej/')

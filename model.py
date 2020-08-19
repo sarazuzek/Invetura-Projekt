@@ -1,5 +1,34 @@
 import json
 
+class Uporabnik:
+    def __init__(self, uporabnisko_ime, zasifrirano_geslo, inventura):
+        self.uporabnisko_ime = uporabnisko_ime	
+        self.zasifrirano_geslo = zasifrirano_geslo
+        self.inventura = inventura
+
+    def preveri_geslo(self, zasifrirano_geslo):	
+        if self.zasifrirano_geslo != zasifrirano_geslo:	
+            raise ValueError('Vnesli ste napačno geslo. Poizkusite znova.')	
+
+    def shrani_stanje(self, ime_datoteke):	
+        slovar_stanja = {
+            'uporabnisko_ime' : self.uporabnisko_ime,	
+            'zasifrirano_geslo' : self.zasifrirano_geslo,	
+            'inventura': self.inventura.slovar_s_stanjem()	
+            }	
+        with open(ime_datoteke, 'w', encoding='utf-8') as datoteka:	
+            json.dump(slovar_stanja, datoteka, ensure_ascii=False, indent=4)	
+
+    @classmethod	
+    def nalozi_stanje(cls, ime_datoteke):	
+        with open(ime_datoteke) as datoteka:
+            slovar_stanja = json.load(datoteka)	
+        uporabnisko_ime = slovar_stanja['uporabnisko_ime']	
+        zasifrirano_geslo = slovar_stanja['zasifrirano_geslo']	
+        inventura = Inventura.nalozi_iz_slovarja(slovar_stanja['inventura'])	
+        return cls(uporabnisko_ime, zasifrirano_geslo, inventura)	
+
+
 class Inventura: 
     def __init__(self):
         self.inventura = {}
@@ -189,7 +218,7 @@ class Inventura:
             'vsi racuni' : [{
                 'kategorija' : k[0],
                 'izdelek': k[1],
-                'kolicina' : v[0],
+                'kolicina': v[0],
                 'skupna vrednost': v[1]
             } for k,v in self.vsi_racuni.items()],
             'inventura' : [{
